@@ -3,12 +3,16 @@ import os
 
 haar_file = "haarcascade_frontalface_default.xml"
 datasets = 'datasets'
-sub_data = 'elon'
 
-path = os.path.join(datasets, sub_data)
-if not os.path.isdir(path):
-    print(path)
-    os.mkdir(path)
+while True:
+    sub_data = input("Enter name for the dataset: ")
+    path = os.path.join(datasets, sub_data)
+    
+    if os.path.isdir(path):
+        print(f"Error: Dataset '{sub_data}' already exists. Please choose a different name.")
+    else:
+        os.mkdir(path)
+        break
     
 (width, height) = (130, 100)
     
@@ -17,7 +21,7 @@ camera = cv2.VideoCapture(0)
 
 count = 1
 while count < 31:
-    print(count)
+    print(f"Image {count} added for {sub_data}")
     _, frame = camera.read()
     
     grayImg = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) 
