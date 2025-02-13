@@ -26,8 +26,8 @@ print(images, labels)
 
 (width, height) = (130, 100)
 
-model = cv2.face.FisherFaceRecognizer_create()
-# model = cv2.face.LBPHFaceRecognizer_create()
+# model = cv2.face.FisherFaceRecognizer_create()
+model = cv2.face.LBPHFaceRecognizer_create()
 model.train(images, labels)
 
 print("Training Completed")
@@ -48,14 +48,16 @@ while True:
         
         prediction = model.predict(face_resize)
         
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         if prediction[1] < 800:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.putText(frame, f'{names[prediction[0]]} - {prediction[1]:.2f}', (x-10, y-10), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)            
             print(names[prediction[0]])
             cnt = 0
         else:
             cnt += 1
-            cv2.putText(frame, 'Unknown', (x-10, y-10), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)            
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+            cv2.putText(frame, 'Unknown', (x-10, y-10), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 0, 255), 2)
+                        
             if cnt > 100:
                 print("Unknown Person")
                 cv2.imwrite("unknown.jpg", frame)
