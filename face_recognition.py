@@ -1,5 +1,5 @@
 import cv2
-import numpy
+import numpy as np
 import os
 
 haar_file = "haarcascade_frontalface_default.xml"
@@ -9,7 +9,30 @@ datasets = 'datasets'
 print("Training...")
 
 (images, labels, names, id) = ([], [], {}, 0)
+
+for (subdirs, dirs, files) in os.walk(datasets):
+    for subdir in dirs:
+        names[id] = subdir
+        subjectPath = os.path.join(datasets, subdir)
+        for filename in os.listdir(subjectPath):
+            path = subjectPath + "/" + filename
+            label = id
+            images.append(cv2.imread(path, 0))
+            labels.append(int(label))
+        id += 1
+
+(images, labels) = [np.array(lis) for lis in (images, labels)]
+print(images, labels)
+
+(width, height) = (130, 100)
+
+model = cv2.face.LBPHFaceRecognizer_create()
+model.train(images, labels)
+
+print("Training Completed")
+
 camera = cv2.VideoCapture(0)
+cnt = 0
 
 while True:
     _, frame = camera.read()
