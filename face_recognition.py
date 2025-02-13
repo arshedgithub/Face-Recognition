@@ -41,8 +41,24 @@ while True:
     faces = face_cascade.detectMultiScale(grayImg, 1.3, 4) # get coordinates of face
     
     for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
         face = grayImg[y:y+h, x:x+w]
+        face_resize = cv2.resize(face, (width, height))
+        
+        prediction = model.predict(face_resize)
+        
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        if prediction[1] < 800:
+            cv2.putText(frame, f'{names[prediction[0]]} - {prediction[1]:.2f}', (x-10, y-10), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)            
+            print(names[prediction[0]])
+            cnt = 0
+        else:
+            cnt += 1
+            cv2.putText(frame, 'Unknown', (x-10, y-10), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)            
+            if cnt > 100:
+                print("Unknown Person")
+                cv2.imwrite("unknown.jpg", frame)
+                cnt = 0
         
     cv2.imshow("Face Recognition", frame)
     key = cv2.waitKey(10) & 0xFF
