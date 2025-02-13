@@ -26,7 +26,8 @@ print(images, labels)
 
 (width, height) = (130, 100)
 
-model = cv2.face.LBPHFaceRecognizer_create()
+model = cv2.face.FisherFaceRecognizer_create()
+# model = cv2.face.LBPHFaceRecognizer_create()
 model.train(images, labels)
 
 print("Training Completed")
